@@ -3,6 +3,8 @@ package inventory
 import (
 	"fmt"
 	"io/ioutil"
+	"os/exec"
+	"strings"
 
 	yaml "gopkg.in/yaml.v2"
 )
@@ -68,6 +70,24 @@ func NewInventory(inventoryFile string) (Inventory, error) {
 
 	var inventory Inventory
 	err = yaml.Unmarshal(fileContents, &inventory)
+	if err != nil {
+		return nil, fmt.Errorf("failed to unmarshal inventory contents: %s", err)
+	}
+
+	return inventory, nil
+}
+
+func NewExternalInventory(executablePath, args string) (Inventory, error) {
+	cliArgs := strings.Split(args, " ")
+	cmd := exec.Command(executablePath, cliArgs...)
+
+	output, err := cmd.CombinedOutput()
+	if err != nil {
+		return nil, fmt.Errorf("failed to grab process output: %s", err)
+	}
+
+	var inventory Inventory
+	err = yaml.Unmarshal(output, &inventory)
 	if err != nil {
 		return nil, fmt.Errorf("failed to unmarshal inventory contents: %s", err)
 	}

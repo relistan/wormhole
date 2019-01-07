@@ -1,0 +1,14 @@
+#!/bin/sh
+
+cat <<EOF
+---
+- host: "gondor"
+  port: 2222
+  username: isildur
+  password: "welcome"
+
+- host: "mordor"
+  port: 4444
+  username: sauron
+  password: "thou shalt not pass"
+EOF

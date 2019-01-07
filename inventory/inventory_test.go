@@ -72,3 +72,18 @@ func Test_NewInventory(t *testing.T) {
 		})
 	})
 }
+
+func Test_NewExternalInventory(t *testing.T) {
+	Convey("NewInventory()", t, func() {
+		i, err := NewExternalInventory("/bin/sh", "fixtures/external_inventory.sh")
+
+		Convey("should run successfully", func() {
+			So(err, ShouldBeNil)
+			So(i, ShouldHaveLength, 2)
+			So(i[0].Host, ShouldEqual, "gondor")
+			So(i[0].Username, ShouldEqual, "isildur")
+			So(i[1].Port, ShouldEqual, 4444)
+			So(i[1].Password, ShouldEqual, "thou shalt not pass")
+		})
+	})
+}
